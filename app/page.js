@@ -107,6 +107,18 @@ function FilterableProductTable({ products }) {
     </div>
   ); 
 }
+let App = function App() {
+  return (<>
+            <FilterableProductTable products={PRODUCTS} />
+          </>)
+}
+const root = createRoot(document.getElementById('root'));
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+
 
 export default function Home() {
     
