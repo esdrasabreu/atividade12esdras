@@ -107,105 +107,77 @@ function FilterableProductTable({ products }) {
   );
 }
 
+function SearchBar(props) {
+  const handleFilterTextChange = (e) => {
+    props.onFilterTextChange(e.target.value);
+  }
+
+  const handleInStockChange = (e) => {
+    props.onInStockChange(e.target.checked);
+  }
+
+  return (
+    <form>
+      <input type="text" placeholder="Search..." value={props.filterText} onChange={handleFilterTextChange} />
+      <p>
+        <input type="checkbox" checked={props.inStockOnly} onChange={handleInStockChange} />
+        {' '}
+        Only show products in stock
+      </p>
+    </form>
+  );
+}
+
 function Home() {
   const [blogMessages, setBlogMessages] = useState([]);
 
   useEffect(() => {
     fetch('https://...')
       .then(response => response.json())
-      .then(data => {
-        setBlogMessages(data);
-      })
-      .catch(error => {
-        console.error('Error fetching blog messages:', error);
-      });
+      .then(data => setBlogMessages(data))
+      .catch(error => console.error(error));
   }, []);
 
-  return (
-    <main className={styles.main}>
-      <FilterableMessageTable messages={blogMessages} />
-    </main>
-  );
-}
-
-function MessageRow({ message }) {
-  return (
-    <tr>
-      <td>{message.author}</td>
-      <td>{message.subject}</td>
-      <td>{message.body}</td>
-    </tr>
-  );
-}
-
-function MessageCategoryRow({ category }) {
-  return (
-    <tr>
-      <th colSpan="3">{category}</th>
-    </tr>
-  );
-}
-
-function SearchBar({ filterText, onFilterTextChange }) {
-  return (
-    <form>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={filterText}
-        onChange={(e) => onFilterTextChange(e.target.value)}
-      />
-    </form>
-  );
-}
-
-function MessageTable({ messages, filterText }) {
-  const rows = [];
-  let lastCategory = null;
-
-  messages.forEach((message) => {
-    if (message.subject.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
-      return;
-    }
-    if (message.category !== lastCategory) {
-      rows.push(
-        <MessageCategoryRow
-          category={message.category}
-          key={message.category}
-        />
-      );
-    }
-    rows.push(<MessageRow message={message} key={message.id} />);
-    lastCategory = message.category;
-  });
-
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Author</th>
-          <th>Subject</th>
-          <th>Body</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
-  );
-}
-
-function FilterableMessageTable({ messages }) {
   const [filterText, setFilterText] = useState('');
+  const [inStockOnly, setInStockOnly] = useState(false);
 
-  const filteredMessages = messages.filter((message) => {
-    return message.author.toLowerCase().indexOf(filterText.toLowerCase()) !== -1 ||
-      message.subject.toLowerCase().indexOf(filterText.toLowerCase()) !== -1 ||
-      message.body.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
-  });
+  const handleFilterTextChange = (filterText) => {
+    setFilterText(filterText);
+  }
+
+  const handleInStockChange = (inStockOnly) => {
+    setInStockOnly(inStockOnly);
+  }
 
   return (
-    <div>
-      <SearchBar filterText={filterText} onFilterTextChange={setFilterText} />
-      <MessageTable messages={filteredMessages} filterText={filterText} />
+    <div className={styles.container}>
+      <main className={styles.main}>
+        <h1 className={styles.title}>
+          Welcome to my blog
+        </h1>
+        <SearchBar filterText={filterText} inStockOnly={inStockOnly} onFilterTextChange={handleFilterTextChange} onInStockChange={handleInStockChange} />
+        <div className={styles.grid}>
+          {blogMessages.filter((message) => message.includes(filterText) && (!inStockOnly || message.stocked)).map((message, index) => (
+            <div className={styles.card} key={index}>
+              <h3>{message.name}</h3>
+              <p>{message.description}</p>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      <footer className={styles.footer}>
+        <a
+          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by{' '}
+          <span className={styles.logo}>
+            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+          </span>
+        </a>
+      </footer>
     </div>
   );
 }
