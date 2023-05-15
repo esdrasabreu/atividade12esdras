@@ -161,7 +161,7 @@ const Home = () => {
 
   return (
     <main className={styles.main}>
-      <FilterableMessageTable messages={blogMessages} />
+      <FilterableProductTable products={PRODUCTS} />
     </main>
   );
 };
