@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './page.module.css';
 import dynamic from 'next/dynamic';
-import FilterableMessageTable from './FilterableMessageTable';
 
 const PRODUCTS = [
   { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
@@ -120,36 +119,11 @@ function FilterableProductTable({ products }) {
   );
 }
 
-function FilterableMessageTable({ messages }) {
-  return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Message</th>
-          </tr>
-        </thead>
-        <tbody>
-          {messages.map((message, index) => (
-            <tr key={index}>
-              <td>{message}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+const FilterableMessageTable = dynamic(() => import('./FilterableMessageTable'), {
+  ssr: false,
+});
 
-function App() {
-  return (
-    <FilterableProductTable products={PRODUCTS} />
-  );
-}
-
-ReactDOM.render(<App />, document.getElementById('root'));
-
-const Home = () => {
+function Home() {
   const [blogMessages, setBlogMessages] = useState([]);
 
   useEffect(() => {
@@ -165,7 +139,7 @@ const Home = () => {
       <FilterableMessageTable messages={blogMessages} />
     </main>
   );
-};
+}
 
 export default Home;
 
