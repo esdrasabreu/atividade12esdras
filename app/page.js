@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './page.module.css';
 import dynamic from 'next/dynamic';
+import FilterableMessageTable from './FilterableMessageTable';
 
 const PRODUCTS = [
   { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
@@ -147,12 +148,6 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-const FilterableMessageTable = dynamic(
-  () => import('./FilterableMessageTable'),
-  { ssr: false }
-);
-
 
 const Home = () => {
   const [blogMessages, setBlogMessages] = useState([]);
