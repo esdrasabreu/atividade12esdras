@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './page.module.css';
 
@@ -125,4 +125,27 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
+const Home = () => {
+  const [blogMessages, setBlogMessages] = useState([]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      fetch('https://...')
+        .then(response => response.json())
+        .then(data => {
+          setBlogMessages(data);
+        });
+    }
+  }, []);
+
+  return (
+    <main className={styles.main}>
+      <FilterableMessageTable messages={blogMessages} />
+    </main>
+  );
+};
+
+export default Home;
+
+
 
