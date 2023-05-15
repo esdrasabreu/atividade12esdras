@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './page.module.css';
