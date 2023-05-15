@@ -1,6 +1,6 @@
 // Importar as bibliotecas necessárias
 "use client"; 
-import React from 'react';
+
 import { useState } from 'react';
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom';
