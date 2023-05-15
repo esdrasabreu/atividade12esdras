@@ -118,6 +118,27 @@ function FilterableProductTable({ products }) {
   );
 }
 
+function FilterableMessageTable({ messages }) {
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          {messages.map((message, index) => (
+            <tr key={index}>
+              <td>{message}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function App() {
   return (
     <FilterableProductTable products={PRODUCTS} />
