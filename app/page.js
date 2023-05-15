@@ -1,6 +1,9 @@
 // Importar as bibliotecas necessárias
-import { createRoot } from 'https://esm.sh/react-dom@17.0.2';
-import { useState } from 'https://esm.sh/react@17.0.2';
+"use client"; 
+import React from 'react';
+import { useState } from 'react';
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom';
 
 // Definir os componentes do aplicativo
 function ProductCategoryRow({ category }) {
