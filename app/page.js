@@ -1,140 +1,79 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import styles from './page.module.css';
 
-const PRODUCTS = [
-  { category: "Fruits", price: "$1", stocked: true, name: "Apple" },
-  { category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit" },
-  { category: "Fruits", price: "$2", stocked: false, name: "Passionfruit" },
-  { category: "Vegetables", price: "$2", stocked: true, name: "Spinach" },
-  { category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin" },
-  { category: "Vegetables", price: "$1", stocked: true, name: "Peas" }
-];
+import styles from "./page.module.css";
+import React from "react";
+import { useState } from "react";
 
-function ProductCategoryRow({ category }) {
-  return (
-    <tr>
-      <th colSpan="2">{category}</th>
-    </tr>
-  );
-}
-
-function ProductRow({ product }) {
-  const name = product.stocked ? (
-    product.name
-  ) : (
-    <span style={{ color: 'red' }}>{product.name}</span>
-  );
-
-  return (
-    <tr>
-      <td>{name}</td>
-      <td>{product.price}</td>
-    </tr>
-  );
-}
-
-function SearchBar({ filterText, inStockOnly, onFilterTextChange, onInStockOnlyChange }) {
+function SearchBar({ filterText, onFilterTextChange }) {
   return (
     <form>
+      <p>Procure uma mensagem:</p>
       <input
+        style={{width:"100%"}}
         type="text"
         value={filterText}
         placeholder="Search..."
         onChange={(e) => onFilterTextChange(e.target.value)}
       />
-      <label>
-        <input
-          type="checkbox"
-          value={inStockOnly}
-          onChange={(e) => onInStockOnlyChange(e.target.checked)}
-        />
-        {' '}
-        Only show products in stock
-      </label>
     </form>
   );
 }
 
-function ProductTable({ products, filterText, inStockOnly }) {
-  const rows = [];
-  let lastCategory = null;
-  products.forEach((product) => {
-    if (product.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
-      return;
-    }
-    if (inStockOnly && !product.stocked) {
-      return;
-    }
-    if (product.category !== lastCategory) {
-      rows.push(
-        <ProductCategoryRow
-          category={product.category}
-          key={product.category}
-        />
-      );
-    }
-    rows.push(
-      <ProductRow
-        product={product}
-        key={product.name}
-      />
-    );
-    lastCategory = product.category;
-  });
-
+function MessageRow({ message }) {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+    <tr>
+      <td>{message[1]}</td>
+      <td>{message[0]}</td>
+      <td>{new Date(message[2]).toLocaleString()}</td>
+    </tr>
   );
 }
 
-function FilterableProductTable({ products }) {
-  const [filterText, setFilterText] = useState('');
-  const [inStockOnly, setInStockOnly] = useState(false);
+function FilterableMessageTable({ messages }) {
+  const [filterText, setFilterText] = useState("");
+
+  const rows = [];
+  messages.forEach((message) => {
+    const messageText = message.toString();
+    if (messageText.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
+      return;
+    }
+    rows.push(
+      <MessageRow message={message} key={`${message[0]}-${message[2]}`} />
+    );
+  });
 
   return (
     <div>
-      <SearchBar
-        filterText={filterText}
-        inStockOnly={inStockOnly}
-        onFilterTextChange={setFilterText}
-        onInStockOnlyChange={setInStockOnly}
-      />
-      <ProductTable
-        products={products}
-        filterText={filterText}
-        inStockOnly={inStockOnly}
-      />
+      <SearchBar filterText={filterText} onFilterTextChange={setFilterText} />
+      <table>
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Message</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
     </div>
   );
 }
 
-const Home = () => {
+export default function Home() {
   const [blogMessages, setBlogMessages] = useState([]);
 
-  useEffect(() => {
-    fetch('https://...')
-      .then(response => response.json())
-      .then(data => {
-        setBlogMessages(data);
-      });
-  }, []);
+  fetch(
+    "https://script.google.com/macros/s/AKfycbzBn3sALe1rYjz7Ze-Ik7q9TEVP0I2V3XX7GNcecWP8NvCzGt4yO_RT1OlQp09TE9cU/exec"
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      setBlogMessages(data);
+    });
 
   return (
     <main className={styles.main}>
-      <FilterableProductTable products={PRODUCTS} />
+      <FilterableMessageTable messages={blogMessages} />
     </main>
   );
-};
-
-export default Home;
-
-
+}
